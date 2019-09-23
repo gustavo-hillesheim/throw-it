@@ -1,6 +1,6 @@
 # throw_it
 
-A app that let you almost literally throw virtual things at your friends.
+An app for throwing messages at your friends.
 
 ## Getting Started
 
