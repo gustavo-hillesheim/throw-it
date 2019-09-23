@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
-import 'package:expo_sensors/device_motion.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 
 import 'package:throw_it/components/action-button.dart';
 
@@ -13,7 +13,7 @@ class ThrowingPage extends StatelessWidget {
 			body: Column(
 				mainAxisSize: MainAxisSize.max,
 				children: <Widget>[
-					ExpoSensorsInformation(),
+					SensorsInformation(),
 					Expanded(
 						flex: 3,
 						child: ActionButton(
@@ -29,81 +29,6 @@ class ThrowingPage extends StatelessWidget {
 	}
 }
 
-class ExpoSensorsInformation extends StatelessWidget {
-
-	@override
-	Widget build(BuildContext context) {
-
-		return StreamBuilder(
-			stream: DeviceMotion.events,
-			builder: (context, AsyncSnapshot<DeviceMotionEvent> snapshot) {
-
-				if (!snapshot.hasData) {
-					return Column(
-						children: [
-							Container(
-								margin: EdgeInsets.symmetric(
-									vertical: 16
-								),
-								child: Text('Trying to load sensors information...')
-							),
-							CircularProgressIndicator()
-						]
-					);
-				}
-
-				var event = snapshot.data;
-				return Column(
-					children: [
-						Expanded(
-							child: ExpoSensorsAxisInformation(
-								title: 'Gyroscope Information',
-								axis: event.rotation
-							)
-						),
-						Expanded(
-							child: ExpoSensorsAxisInformation(
-								title: 'Accelerometer Information',
-								axis: event.acceleration
-							)
-						)
-					]
-				);
-			}
-		);
-	}
-}
-
-class ExpoSensorsAxisInformation extends StatelessWidget {
-
-	final String title;
-	final Map axis;
-
-	ExpoSensorsAxisInformation({this.title, this.axis, Key key}) : super(key: key);
-
-	@override
-	Widget build(BuildContext context) {
-
-		return Column(
-			children: <Widget>[
-				Text(
-					this.title,
-					style: TextStyle(
-						fontSize: 24
-					),
-				),
-				Text('X: ${axis['x']}'),
-				Text('Y: ${axis['y']}'),
-				Text('Z: ${axis['z']}')
-			],
-		);
-	}
-
-	String _formatDouble(double d) {
-		return d.abs().toStringAsFixed(1);
-	}
-}
-
 class SensorsInformation extends StatelessWidget {
 
 	@override
@@ -113,10 +38,11 @@ class SensorsInformation extends StatelessWidget {
 			children: [
 				Expanded(
 					flex: 4,
-					child: SensorsStreamAxisInformation(
+					child: CompassInformation()
+					/*SensorsStreamAxisInformation(
 						"Gyroscope Information",
 						gyroscopeEvents
-					)
+					)*/
 				),
 				Expanded(
 					flex: 4,
@@ -126,6 +52,46 @@ class SensorsInformation extends StatelessWidget {
 					)
 				),
 			]
+		);
+	}
+}
+
+class CompassInformation extends StatelessWidget {
+
+	@override
+	Widget build(BuildContext context) {
+
+		return StreamBuilder(
+			stream: FlutterCompass.events,
+			builder: (context, AsyncSnapshot<double> snapshot) {
+
+				if (!snapshot.hasData) {
+					return Column(
+						children: [
+							Container(
+								margin: EdgeInsets.symmetric(
+									vertical: 16
+								),
+								child: Text('Trying to read Compass Information...')
+							),
+							LinearProgressIndicator()
+						]
+					);
+				}
+
+				double angle = snapshot.data;
+				return Column(
+					children: [
+						Text(
+							'Compass Information',
+							style: TextStyle(
+								fontSize: 24
+							)
+						),
+						Text('Angle: $angleº')
+					]
+				);
+			},
 		);
 	}
 }
@@ -153,7 +119,7 @@ class SensorsStreamAxisInformation extends StatelessWidget {
 								),
 								child: Text('Trying to read ${this.title}...')
 							),
-							CircularProgressIndicator()
+							LinearProgressIndicator()
 						]
 					);
 				}
