@@ -3,7 +3,7 @@ import 'dart:async';
 
 class RotationVector {
 
-	static final _stream = EventChannel('io.hill.rotation-vector/stream');
+	static final _stream = EventChannel('io.hill.rotation_vector/stream');
 
 	static Stream get events {
 		return _stream
@@ -14,27 +14,26 @@ class RotationVector {
 	//TODO: Implementar real oficial
 	static RotationVectorEvent instant() {
 
-		return _convertInputToRotationVectorEvent(null);
+		return _convertInputToRotationVectorEvent({});
 	}
 
-	//TODO: Implementar real oficial
 	static RotationVectorEvent _convertInputToRotationVectorEvent(input) {
 
 		return RotationVectorEvent(
-			roll: 0,
-			pitch: 0,
-			azimuth: 0
+			x: input['x'],
+			y: input['y'],
+			z: input['z']
 		);
 	}
 }
 
 class RotationVectorEvent {
 
-	final double azimuth;
-	final double pitch;
-	final double roll;
+	final double z;
+	final double x;
+	final double y;
 
-	RotationVectorEvent({this.azimuth, this.pitch, this.roll});
+	RotationVectorEvent({this.z, this.x, this.y});
 }
 
 typedef OnRotationVectorEvent = void Function(RotationVectorEvent event);

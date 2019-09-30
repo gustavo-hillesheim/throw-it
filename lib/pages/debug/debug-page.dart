@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:throw_it/pages/debug/sensors-information.dart';
 import 'package:throw_it/components/action-button.dart';
 
-class ThrowingPage extends StatelessWidget {
+class DebugPage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
@@ -11,17 +12,15 @@ class ThrowingPage extends StatelessWidget {
 			body: SafeArea(
 				child: Column(
 					mainAxisSize: MainAxisSize.max,
-					children: <Widget>[
+					children: [
 						Expanded(
 							flex: 8,
-							child: Center(
-								child: Text('Not implemented. Yet...'),
-							)
+							child: SensorsInformation()
 						),
 						_goBackButton(context)
-					],
+					]
 				)
-			)
+			),
 		);
 	}
 
@@ -33,7 +32,7 @@ class ThrowingPage extends StatelessWidget {
 				text: 'Go back',
 				onPressed: () {
 					Navigator.pop(context);
-				}
+				},
 			)
 		);
 	}
