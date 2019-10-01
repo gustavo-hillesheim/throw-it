@@ -13,7 +13,7 @@ class SensorsInformation extends StatelessWidget {
 			children: [
 				SensorsStreamAxisInformation(
 					"Rotation Information",
-					RotationVector.events
+					RotationVector.events(degrees: true)
 				),
 				SensorsStreamAxisInformation(
 					"Accelerometer Information",
@@ -32,7 +32,7 @@ class SmartphoneRotation extends StatelessWidget {
 	Widget build(BuildContext context) {
 
 		return StreamBuilder(
-			stream: RotationVector.events,
+			stream: RotationVector.events(),
 			builder: (context, snapshot) {
 
 				if (!snapshot.hasData) {
@@ -41,24 +41,60 @@ class SmartphoneRotation extends StatelessWidget {
 					);
 				}
 
-				var event = snapshot.data;
-				var screenSize = MediaQuery.of(context).size;
-				return Center(
+				RotationVectorEvent event = snapshot.data;
+				Size screenSize = MediaQuery.of(context).size;
+
+				return SizedBox(
+					height: screenSize.height * 0.25,
+					width: screenSize.width * 0.25,
 					child: Transform(
+						alignment: Alignment.center,
 						transform: Matrix4
 							.identity()
-							..setEntry(3, 2, 0.001)
-							..setRotationX(event.x * 0.1)
-							..setRotationY(event.y * 0.1)
-							..setRotationZ(event.z * 0.1),
-						child: Container(
-							height: screenSize.height * 0.25,
-							width: screenSize.width * 0.25,
-							color: Colors.lightGreenAccent
-						)
+							..rotateX(event.x)
+							..rotateY(event.y)
+							..rotateZ(event.z),
+						child: _Device()
 					)
 				);
 			}
+		);
+	}
+}
+
+class _Device extends StatelessWidget {
+
+	@override
+	Widget build(BuildContext context) {
+
+		return Column(
+			children: [
+				Expanded(
+					child: Row(
+						children: [
+							_box(Colors.yellow),
+							_box(Colors.red)
+						]
+					)
+				),
+				Expanded(
+					child: Row(
+						children: [
+							_box(Colors.blue),
+							_box(Colors.green)
+						]
+					)
+				)
+			]
+		);
+	}
+
+	Widget _box(Color color) {
+
+		return Expanded(
+			child: Container(
+					color: color
+			)
 		);
 	}
 }
@@ -115,13 +151,9 @@ class SensorsStreamAxisInformation extends StatelessWidget {
 	Text _axisInfo(String axisName, double value) {
 
 		return Text(
-			'$axisName: ${_formatDouble(value)}',
+			'$axisName: ${value}',
 			textAlign: TextAlign.left,
 		);
-	}
-
-	String _formatDouble(double d) {
-		return d.toStringAsFixed(1);
 	}
 }
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class RotationVectorSensorListener implements SensorEventListener {
 
 
-	private final int SENSOR_DELAY_MICROS = 16 * 1000;
+	private final int SENSOR_DELAY_MICROS = 100 * 1000;
 	private final WindowManager windowManager;
 	private final SensorManager sensorManager;
 	private final Sensor rotationSensor;
@@ -112,9 +112,9 @@ public class RotationVectorSensorListener implements SensorEventListener {
 
 		SensorManager.getOrientation(rotationMatrix, rotation);
 
-		double z = Math.toDegrees(rotation[0]);
-		double x = Math.toDegrees(rotation[1]);
-		double y = Math.toDegrees(rotation[2]);
+		double z = rotation[0];
+		double x = rotation[1];
+		double y = rotation[2];
 
 		for (RotationVectorListener listener : listeners) {
 			listener.onChange(x, y, z);

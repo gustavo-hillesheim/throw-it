@@ -11,7 +11,7 @@ class ActionButton extends StatelessWidget {
 	final Color hoverColor;
 	final Function onPressed;
 
-	ActionButton({this.text, this.child, this.elevation, this.hoverColor,
+	const ActionButton({this.text, this.child, this.elevation, this.hoverColor,
 		this.width, this.height, this.color, this.onPressed, Key key}) : super(key: key);
 
 	@override
