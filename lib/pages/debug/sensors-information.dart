@@ -44,16 +44,17 @@ class SmartphoneRotation extends StatelessWidget {
 				RotationVectorEvent event = snapshot.data;
 				Size screenSize = MediaQuery.of(context).size;
 
-				return SizedBox(
-					height: screenSize.height * 0.25,
-					width: screenSize.width * 0.25,
-					child: Transform(
-						alignment: Alignment.center,
-						transform: Matrix4
-							.identity()
-							..rotateX(event.x)
-							..rotateY(event.y)
-							..rotateZ(event.z),
+				return Transform(
+					alignment: Alignment.center,
+					transform: Matrix4
+						.identity()
+						..setEntry(3, 2, 0.006)
+						..rotateX(-event.x)
+						..rotateY(-event.y)
+						..rotateZ(event.z),
+					child: Container(
+						height: screenSize.height * 0.25,
+						width: screenSize.width * 0.25,
 						child: _Device()
 					)
 				);
@@ -68,6 +69,7 @@ class _Device extends StatelessWidget {
 	Widget build(BuildContext context) {
 
 		return Column(
+			mainAxisSize: MainAxisSize.max,
 			children: [
 				Expanded(
 					child: Row(
@@ -93,7 +95,7 @@ class _Device extends StatelessWidget {
 
 		return Expanded(
 			child: Container(
-					color: color
+				color: color
 			)
 		);
 	}
