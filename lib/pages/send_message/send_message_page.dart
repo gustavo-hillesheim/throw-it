@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:throw_it/components/action-button.dart';
 
-class ThrowingPage extends StatelessWidget {
+class SendMessagePage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
@@ -34,6 +34,30 @@ class ThrowingPage extends StatelessWidget {
 				onPressed: () {
 					Navigator.pop(context);
 				}
+			)
+		);
+	}
+}
+
+class _InputText extends StatefulWidget {
+	_InputTextState createState() => _InputTextState();
+}
+
+class _InputTextState extends State<_InputText> {
+
+	@override
+	Widget build(BuildContext context) {
+
+		return Center(
+			child: Padding(
+				padding: EdgeInsets.symmetric(
+					horizontal: 32
+				),
+				child: TextField(
+					decoration: InputDecoration(
+						hintText: 'Write something you wanna throw...'
+					),
+				)
 			)
 		);
 	}

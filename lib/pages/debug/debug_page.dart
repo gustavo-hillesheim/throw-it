@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:throw_it/pages/debug/sensors-information.dart';
+import 'package:throw_it/pages/debug/sensors_information.dart';
 import 'package:throw_it/components/action-button.dart';
 
 class DebugPage extends StatelessWidget {

@@ -8,32 +8,41 @@ class ActionButton extends StatelessWidget {
 	final double width;
 	final double height;
 	final Color color;
-	final Color hoverColor;
+	final Color textColor;
 	final Function onPressed;
 
-	const ActionButton({this.text, this.child, this.elevation, this.hoverColor,
-		this.width, this.height, this.color, this.onPressed, Key key}) : super(key: key);
+	const ActionButton({this.text, this.child, this.elevation, this.width,
+		this.height, this.color, this.textColor, this.onPressed, Key key}) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
 
 		return Center(
 			child: Container(
-				width: this.width ?? MediaQuery.of(context).size.width * 0.6,
+				width: this.width ?? MediaQuery.of(context).size.width * 0.8,
 				height: this.height ?? 48,
 				padding: EdgeInsets.symmetric(
 					horizontal: 16
 				),
 				child: RaisedButton(
-					child: this.child ?? Text(this.text),
+					child: this.child ?? _defaultText(context),
 					onPressed: this.onPressed,
 					elevation: this.elevation ?? 4,
-					color: this.color ?? Colors.lightGreenAccent[400],
-					hoverColor: this.hoverColor ?? Colors.lightGreenAccent[700],
+					color: this.color ?? Theme.of(context).primaryColor,
 					shape: RoundedRectangleBorder(
 						borderRadius: BorderRadius.all(Radius.circular(32))
 					),
 				)
+			)
+		);
+	}
+
+	Widget _defaultText(BuildContext context) {
+
+		return Text(
+			this.text,
+			style: TextStyle(
+				color: this.textColor ?? Theme.of(context).accentColor
 			)
 		);
 	}

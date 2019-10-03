@@ -14,9 +14,8 @@ public class RotationVectorChannel {
 	public static void init(FlutterActivity activity) {
 
 		if (!started) {
-
 			new EventChannel(activity.getFlutterView(), STREAM_CHANNEL_NAME)
-				.setStreamHandler(new RotationVectorChannelStreamHandler(TAG, activity));
+				.setStreamHandler(new RotationVectorChannelStreamHandler(activity));
 			started = true;
 		} else {
 			Log.i(TAG, "Cannot init RotationVectorChannel since it's already initiated");

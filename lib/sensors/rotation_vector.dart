@@ -7,20 +7,20 @@ class RotationVector {
 	static final _stream = EventChannel('io.hill.rotation_vector/stream');
 	static Stream _broadcastStream;
 
-	static Stream<RotationVectorEvent> events({degrees = false}) {
+	static Stream<RotationVectorEvent> events({useDegrees = false}) {
 		if (_broadcastStream == null) {
 			_broadcastStream = _stream.receiveBroadcastStream();
 		}
 		return _broadcastStream
-				.map(_inputToRotationVectorEvent(degrees: degrees));
+				.map(_convertInput(useDegrees));
 	}
 
 	//TODO: Implementar real oficial
 	static RotationVectorEvent instant() {
-		return _inputToRotationVectorEvent()(null);
+		return _convertInput(null);
 	}
 
-	static _inputToRotationVectorEvent({degrees = false}) => (input) {
+	static _convertInput(useDegrees) => (input) {
 
 		if (input == null)
 			return null;
@@ -29,10 +29,10 @@ class RotationVector {
 		double y = input['y'];
 		double z = input['z'];
 
-		if (degrees) {
-			x *= pi / 180;
-			y *= pi / 180;
-			z *= pi / 180;
+		if (useDegrees) {
+			x *= 180 / pi;
+			y *= 180 / pi;
+			z *= 180 / pi;
 		}
 
 		return RotationVectorEvent(

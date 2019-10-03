@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:throw_it/pages/home/home-page.dart';
-import 'package:throw_it/pages/throwing/throwing-page.dart';
-import 'package:throw_it/pages/debug/debug-page.dart';
+import 'package:throw_it/pages/home/home_page.dart';
+import 'package:throw_it/pages/send_message/send_message_page.dart';
+import 'package:throw_it/pages/message_history/message_history_page.dart';
+import 'package:throw_it/pages/debug/debug_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,9 +15,14 @@ class MyApp extends StatelessWidget {
       title: 'Throw It',
       routes: {
         '/': (context) => HomePage(),
-        '/throwing': (context) => ThrowingPage(),
+        '/send-message': (context) => SendMessagePage(),
+        '/message-history': (context) => MessageHistoryPage(),
         '/debug': (context) => DebugPage()
       },
+      theme: ThemeData(
+        primaryColor: Colors.deepOrange[400],
+        accentColor: Colors.white
+      ),
     );
   }
 }

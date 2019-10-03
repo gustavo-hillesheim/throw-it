@@ -11,12 +11,11 @@ import io.flutter.plugin.common.EventChannel;
 
 class RotationVectorChannelStreamHandler implements EventChannel.StreamHandler {
 
-	private String tag;
+	private final String TAG = "RotationVectorStream";
 	private RotationVectorSensorListener sensorListener;
 	private Map<Object, RotationVectorListener> listeners = new HashMap<>();
 
-	RotationVectorChannelStreamHandler(String tag, Activity activity) {
-		this.tag = tag;
+	RotationVectorChannelStreamHandler(Activity activity) {
 		this.sensorListener = new RotationVectorSensorListener(activity);
 	}
 
@@ -28,7 +27,7 @@ class RotationVectorChannelStreamHandler implements EventChannel.StreamHandler {
 				new RotationVectorStreamer("RotationVectorStreamer", eventSink));
 		}
 
-		Log.i(tag, String.format(
+		Log.i(TAG, String.format(
 			"Registering rotation vector listener %d",
 			listeners.get(o).hashCode()));
 		sensorListener.registerListener(listeners.get(o));
@@ -37,7 +36,7 @@ class RotationVectorChannelStreamHandler implements EventChannel.StreamHandler {
 	@Override
 	public void onCancel(Object o) {
 
-		Log.i(tag, String.format(
+		Log.i(TAG, String.format(
 			"Unregistering rotation vector listener %d",
 			listeners.get(o).hashCode()));
 		RotationVectorListener listener = listeners.get(o);

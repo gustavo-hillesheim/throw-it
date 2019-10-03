@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
+import 'dart:math';
 
 import 'package:throw_it/sensors/rotation_vector.dart';
 
@@ -13,14 +14,19 @@ class SensorsInformation extends StatelessWidget {
 			children: [
 				SensorsStreamAxisInformation(
 					"Rotation Information",
-					RotationVector.events(degrees: true)
+					RotationVector.events(
+						useDegrees: true,
+					)
 				),
 				SensorsStreamAxisInformation(
 					"Accelerometer Information",
 					userAccelerometerEvents
 				),
 				Expanded(
-					child: SmartphoneRotation()
+					child: Align(
+						alignment: Alignment.center,
+						child: SmartphoneRotation()
+					)
 				)
 			]
 		);
@@ -153,10 +159,12 @@ class SensorsStreamAxisInformation extends StatelessWidget {
 	Text _axisInfo(String axisName, double value) {
 
 		return Text(
-			'$axisName: ${value}',
+			'$axisName: ${_format(value)}',
 			textAlign: TextAlign.left,
 		);
 	}
+
+	String _format(double value) => value.toStringAsFixed(2);
 }
 
 class _LoadingWidget extends StatelessWidget {

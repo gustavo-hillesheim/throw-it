@@ -11,10 +11,12 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.flutter.Log;
+
 public class RotationVectorSensorListener implements SensorEventListener {
 
 
-	private final int SENSOR_DELAY_MICROS = 100 * 1000;
+	private final int SENSOR_DELAY_MICROS = 16 * 1000;
 	private final WindowManager windowManager;
 	private final SensorManager sensorManager;
 	private final Sensor rotationSensor;
@@ -58,6 +60,8 @@ public class RotationVectorSensorListener implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+		Log.i("RotationVectorSensor", accuracy == sensorManager.SENSOR_STATUS_UNRELIABLE
+			? "sensor accuracy is unreliable" : "sensor accuracy is relialbe");
 		if (lastAccuracy != accuracy) {
 			lastAccuracy = accuracy;
 		}
