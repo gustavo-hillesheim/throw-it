@@ -9,12 +9,11 @@ import io.flutter.plugin.common.EventChannel;
 class RotationVectorStreamer implements RotationVectorListener {
 
 
-	private String tag;
+	private final String TAG = "RotationVectorStreamer";
 	private EventChannel.EventSink eventSink;
 
-	RotationVectorStreamer(String tag, EventChannel.EventSink eventSink) {
+	RotationVectorStreamer(EventChannel.EventSink eventSink) {
 
-		this.tag = tag;
 		this.eventSink = eventSink;
 	}
 
@@ -31,9 +30,9 @@ class RotationVectorStreamer implements RotationVectorListener {
 	@Override
 	public void onError(String code, String message) {
 
-		Log.i(tag, String.format(
+		Log.i(TAG, String.format(
 			"Error while streaming rotation vector: code %s, message %s", code, message));
-		this.eventSink.error(code, message, null);
+		this.eventSink.error(code, message, "teste");
 		if ("404".equals(code))
 			this.eventSink.endOfStream();
 	}

@@ -24,7 +24,7 @@ class RotationVectorChannelStreamHandler implements EventChannel.StreamHandler {
 
 		if (listeners.get(o) == null) {
 			listeners.put(o,
-				new RotationVectorStreamer("RotationVectorStreamer", eventSink));
+				new RotationVectorStreamer(eventSink));
 		}
 
 		Log.i(TAG, String.format(

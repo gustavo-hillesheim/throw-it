@@ -15,11 +15,12 @@ import io.flutter.Log;
 
 public class RotationVectorSensorListener implements SensorEventListener {
 
-
+	private final String TAG = "RotationSensorListener";
 	private final int SENSOR_DELAY_MICROS = 16 * 1000;
 	private final WindowManager windowManager;
 	private final SensorManager sensorManager;
 	private final Sensor rotationSensor;
+	private boolean hasRotationSensor;
 	private int lastAccuracy;
 	private List<RotationVectorListener> listeners;
 
@@ -32,7 +33,7 @@ public class RotationVectorSensorListener implements SensorEventListener {
 
 		if (sensorManager != null) {
 			rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-			sensorManager.registerListener(this, rotationSensor, SENSOR_DELAY_MICROS);
+			hasRotationSensor = sensorManager.registerListener(this, rotationSensor, SENSOR_DELAY_MICROS);
 		} else {
 			rotationSensor = null;
 		}
@@ -40,7 +41,7 @@ public class RotationVectorSensorListener implements SensorEventListener {
 
 	public void registerListener(RotationVectorListener listener) {
 
-		if (rotationSensor == null) {
+		if (!hasRotationSensor || rotationSensor == null) {
 			listener.onError("404", "Rotation sensor not available.");
 		} else {
 			listeners.add(listener);
@@ -60,8 +61,6 @@ public class RotationVectorSensorListener implements SensorEventListener {
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-		Log.i("RotationVectorSensor", accuracy == sensorManager.SENSOR_STATUS_UNRELIABLE
-			? "sensor accuracy is unreliable" : "sensor accuracy is relialbe");
 		if (lastAccuracy != accuracy) {
 			lastAccuracy = accuracy;
 		}

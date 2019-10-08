@@ -11,24 +11,36 @@ class SensorsInformation extends StatelessWidget {
 
 		return Column(
 			mainAxisSize: MainAxisSize.max,
+			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
 				SensorsStreamAxisInformation(
 					"Rotation Information",
-					RotationVector.events(
-						useDegrees: true,
-					)
+					RotationVector.events
+						.map(_radiansToDegrees)
 				),
 				SensorsStreamAxisInformation(
 					"Accelerometer Information",
 					userAccelerometerEvents
 				),
-				Expanded(
-					child: Align(
-						alignment: Alignment.center,
-						child: SmartphoneRotation()
-					)
+				Center(
+					child: SmartphoneRotation()
 				)
 			]
+		);
+	}
+
+	RotationVectorEvent _radiansToDegrees(RotationVectorEvent event) {
+
+		double radiansToDegrees = pi / 180;
+
+		double x = event.x * radiansToDegrees;
+		double y = event.y * radiansToDegrees;
+		double z = event.z * radiansToDegrees;
+
+		return RotationVectorEvent(
+			x: x,
+			y: y,
+			z: z
 		);
 	}
 }
@@ -38,33 +50,40 @@ class SmartphoneRotation extends StatelessWidget {
 	Widget build(BuildContext context) {
 
 		return StreamBuilder(
-			stream: RotationVector.events(),
+			stream: RotationVector.events,
 			builder: (context, snapshot) {
 
+				if (snapshot.hasError) {
+					return _Error('Rotation Information');
+				}
+
 				if (!snapshot.hasData) {
-					return _LoadingWidget(
-						title: 'Rotation Information'
-					);
+					return _Loading('Rotation Information');
 				}
 
 				RotationVectorEvent event = snapshot.data;
 				Size screenSize = MediaQuery.of(context).size;
 
-				return Transform(
-					alignment: Alignment.center,
-					transform: Matrix4
-						.identity()
-						..setEntry(3, 2, 0.006)
-						..rotateX(-event.x)
-						..rotateY(-event.y)
-						..rotateZ(event.z),
-					child: Container(
-						height: screenSize.height * 0.25,
-						width: screenSize.width * 0.25,
-						child: _Device()
-					)
-				);
+				return _rotatingDevice(event, screenSize);
 			}
+		);
+	}
+
+	Widget _rotatingDevice(event, screenSize) {
+
+		return Transform(
+			alignment: Alignment.center,
+			transform: Matrix4
+				.identity()
+				..setEntry(3, 2, 0.006)
+				..rotateX(-event.x)
+				..rotateY(-event.y)
+				..rotateZ(event.z),
+			child: Container(
+				height: screenSize.height * 0.25,
+				width: screenSize.width * 0.25,
+				child: _Device()
+			)
 		);
 	}
 }
@@ -117,23 +136,29 @@ class SensorsStreamAxisInformation extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 
+		this.stream.listen((e) {}, onError: (e) {
+			print('error: $e');
+		});
+
 		return StreamBuilder(
 			stream: this.stream,
 			builder: (context, snapshot) {
 
+				if (snapshot.hasError) {
+					return _Error(this.title);
+				}
+
 				if (!snapshot.hasData) {
-					return _LoadingWidget(
-						title: this.title
-					);
+					return _Loading(this.title);
 				}
 
 				var event = snapshot.data;
-				return _sensorDataWidget(event);
+				return _sensorData(event);
 			}
 		);
 	}
 
-	Widget _sensorDataWidget(event) {
+	Widget _sensorData(event) {
 
 		return Container(
 			margin: EdgeInsets.only(
@@ -167,12 +192,13 @@ class SensorsStreamAxisInformation extends StatelessWidget {
 	String _format(double value) => value.toStringAsFixed(2);
 }
 
-class _LoadingWidget extends StatelessWidget {
+class _Loading extends StatelessWidget {
 
-	final String title;
+	final String text;
 
-	_LoadingWidget({@required this.title, Key key}) : super(key: key);
+	const _Loading(this.text);
 
+	@override
 	Widget build(BuildContext context) {
 
 		return Column(
@@ -181,10 +207,37 @@ class _LoadingWidget extends StatelessWidget {
 					margin: EdgeInsets.symmetric(
 						vertical: 16
 					),
-					child: Text('Trying to read ${this.title}...')
+					child: Text('Trying to read ${this.text}...')
 				),
 				LinearProgressIndicator()
 			]
+		);
+	}
+}
+
+class _Error extends StatelessWidget {
+
+	final String text;
+
+	const _Error(this.text);
+
+	@override
+	Widget build(BuildContext context) {
+
+		return Center(
+			child: Column(
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: [
+					Icon(
+						Icons.error_outline,
+						color: Colors.red,
+						size: 32,
+					),
+					Text(
+						'It was not possible to read ${this.text}'
+					)
+				]
+			)
 		);
 	}
 }
